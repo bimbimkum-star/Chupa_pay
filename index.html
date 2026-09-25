@@ -41,14 +41,13 @@
     .btn-blue { background: #0284c7; color: #fff; }
     .btn-green { background: var(--green); color: #fff; }
     .btn-red { background: var(--red); color: #fff; }
+    .btn-gps { background: #334155; color: var(--yellow); border: 1px dashed var(--yellow); font-size: 12px; height: 38px; margin-top: 6px; }
 
-    /* प्रोवाइडर कंट्रोल पैनल */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .metric-box { background: #0b0f19; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
     .metric-val { font-size: 20px; font-weight: 800; color: var(--blue); margin-top: 2px; }
 
-    /* प्रोवाइडर कार्ड्स (ग्राहक व्यू) */
-    .provider-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
+    .provider-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 12px; }
     .p-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
     .p-name { font-size: 15px; font-weight: 800; color: #fff; }
     .p-role { font-size: 12px; color: var(--blue); font-weight: 700; }
@@ -57,12 +56,15 @@
     .badge-pending { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); }
     .badge-busy { background: rgba(148, 163, 184, 0.2); color: var(--subtext); border: 1px solid var(--subtext); }
 
-    .p-details { font-size: 12px; color: var(--subtext); margin-bottom: 12px; line-height: 1.5; }
+    .p-details { font-size: 12px; color: var(--subtext); margin-bottom: 12px; line-height: 1.6; }
+    .p-area { color: #fff; font-weight: 700; }
     .p-rate { font-size: 13px; font-weight: 800; color: var(--yellow); }
-    .p-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .btn-action { height: 38px; border-radius: 10px; font-size: 12px; font-weight: 800; border: none; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    
+    .p-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .btn-action { height: 38px; border-radius: 10px; font-size: 11.5px; font-weight: 800; border: none; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; }
     .btn-call { background: var(--green); color: #fff; }
     .btn-wa { background: #25d366; color: #fff; }
+    .btn-map { background: #0284c7; color: #fff; }
   </style>
 </head>
 <body>
@@ -75,23 +77,20 @@
     <button class="tab-btn" onclick="showTab('providerTab')">🛠️ प्रोवाइडर खाता</button>
   </div>
 
-  <!-- 1. ग्राहक व्यू (काम ढूँढने वाला) -->
+  <!-- 1. ग्राहक व्यू -->
   <div id="clientTab" class="panel active">
     <div class="card">
       <div class="form-group" style="margin-bottom: 0;">
-        <label>पिन कोड या सेवा से फ़िल्टर करें:</label>
-        <input type="text" id="filterInput" placeholder="उदा. 271801 या ट्यूशन या इलेक्ट्रीशियन" onkeyup="renderProviderList()">
+        <label>पिन कोड, मोहल्ला या सेवा से खोजें:</label>
+        <input type="text" id="filterInput" placeholder="उदा. 271801, घंटाघर, ट्यूशन या प्लंबर" onkeyup="renderProviderList()">
       </div>
     </div>
 
-    <div id="providerListContainer">
-      <!-- प्रोवाइडर्स की लिस्ट जावास्क्रिप्ट से लोड होगी -->
-    </div>
+    <div id="providerListContainer"></div>
   </div>
 
-  <!-- 2. प्रोवाइडर व्यू (हाजिरी और प्रोफाइल) -->
+  <!-- 2. प्रोवाइडर व्यू -->
   <div id="providerTab" class="panel">
-    <!-- अगर रजिस्टर्ड नहीं है तो फॉर्म -->
     <div id="regBox" class="card">
       <h2>📝 नया प्रोवाइडर पंजीकरण</h2>
       <div class="form-group">
@@ -109,10 +108,25 @@
           <option value="दिहाड़ी सहायक / लेबर">🏗️ दिहाड़ी सहायक / लेबर</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>पिन कोड / इलाका:</label>
-        <input type="text" id="pPin" placeholder="उदा. 271801">
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <div class="form-group">
+          <label>पिन कोड:</label>
+          <input type="text" id="pPin" placeholder="उदा. 271801">
+        </div>
+        <div class="form-group">
+          <label>मोहल्ला / लैंडमार्क:</label>
+          <input type="text" id="pArea" placeholder="उदा. घंटाघर चौक">
+        </div>
       </div>
+
+      <div class="form-group">
+        <label>लाइव मैप लोकेशन (GPS):</label>
+        <input type="hidden" id="pCoords">
+        <button type="button" class="btn btn-gps" id="btnGps" onclick="fetchLiveLocation()">📍 मेरी मौजूदा लोकेशन सेट करें (GPS)</button>
+        <small id="gpsStatus" style="font-size:10.5px; color:var(--subtext); display:block; margin-top:3px;">लोकेशन सेट नहीं है</small>
+      </div>
+
       <div class="form-group">
         <label>अपेक्षित फीस / दिहाड़ी (₹):</label>
         <input type="text" id="pFee" placeholder="उदा. ₹400/महीना या ₹500/दिन">
@@ -124,7 +138,6 @@
       <button class="btn btn-blue" onclick="registerProvider()">पंजीकरण पूरा करें</button>
     </div>
 
-    <!-- अगर रजिस्टर्ड है तो डैशबोर्ड -->
     <div id="dashBox" class="card" style="display:none;">
       <h2 id="dashName">🛠️ प्रोवाइडर कंट्रोल रूम</h2>
       
@@ -158,11 +171,10 @@
   </div>
 
   <script>
-    // डमी इनिशियल नेटवर्क डेटा (यदि स्टोरेज खाली हो)
     const initialNetwork = [
-      { id: 'p1', name: 'सुरेश मौर्या', category: 'इलेक्ट्रीशियन व रिपेयर', pin: '271801', fee: '₹250 विज़िट', phone: '9876543210', attendance: 5, score: 14, isBusy: false, lastAttDate: '' },
-      { id: 'p2', name: 'अमित वर्मा', category: 'होम ट्यूशन (गणित/साइंस)', pin: '271801', fee: '₹1200 / महीना', phone: '9876543211', attendance: 4, score: 9, isBusy: false, lastAttDate: '' },
-      { id: 'p3', name: 'कल्लू मिस्त्री', category: 'राजमिस्त्री व निर्माण', pin: '271801', fee: '₹650 / दिन', phone: '9876543212', attendance: 2, score: 3, isBusy: false, lastAttDate: '' }
+      { id: 'p1', name: 'सुरेश मौर्या', category: 'इलेक्ट्रीशियन व रिपेयर', pin: '271801', area: 'घंटाघर चौक', coords: '27.5750,81.5950', fee: '₹250 विज़िट', phone: '9876543210', attendance: 5, score: 14, isBusy: false, lastAttDate: '' },
+      { id: 'p2', name: 'अमित वर्मा', category: 'होम ट्यूशन (गणित/साइंस)', pin: '271801', area: 'सिविल लाइन्स', coords: '27.5800,81.6000', fee: '₹1200 / महीना', phone: '9876543211', attendance: 4, score: 9, isBusy: false, lastAttDate: '' },
+      { id: 'p3', name: 'कल्लू मिस्त्री', category: 'राजमिस्त्री व निर्माण', pin: '271801', area: 'मंडी रोड', coords: '', fee: '₹650 / दिन', phone: '9876543212', attendance: 2, score: 3, isBusy: false, lastAttDate: '' }
     ];
 
     let network = JSON.parse(localStorage.getItem('chupa_network')) || initialNetwork;
@@ -185,10 +197,36 @@
       }
     }
 
+    function fetchLiveLocation() {
+      const status = document.getElementById('gpsStatus');
+      const btn = document.getElementById('btnGps');
+      if (!navigator.geolocation) {
+        alert('आपके फोन में GPS सपोर्ट नहीं है।');
+        return;
+      }
+      status.innerText = "GPS सिग्नल खोजा जा रहा है...";
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(5);
+          const lon = pos.coords.longitude.toFixed(5);
+          document.getElementById('pCoords').value = `${lat},${lon}`;
+          status.innerText = `✓ GPS सेट: ${lat}, ${lon}`;
+          status.style.color = "var(--green)";
+          btn.innerText = "✓ लोकेशन सफलतापूर्वक लॉक हो गई";
+        },
+        (err) => {
+          alert('लोकेशन नहीं मिल सकी। कृपया फोन की GPS परमिशन Allow करें।');
+          status.innerText = "लोकेशन अनुमति अस्वीकृत";
+        }
+      );
+    }
+
     function registerProvider() {
       const name = document.getElementById('pName').value.trim();
       const category = document.getElementById('pCategory').value;
       const pin = document.getElementById('pPin').value.trim();
+      const area = document.getElementById('pArea').value.trim() || 'स्थानीय इलाका';
+      const coords = document.getElementById('pCoords').value.trim();
       const fee = document.getElementById('pFee').value.trim();
       const phone = document.getElementById('pPhone').value.trim();
 
@@ -203,9 +241,11 @@
         name,
         category,
         pin,
+        area,
+        coords,
         fee,
         phone,
-        attendance: 1, // आज की हाजिरी स्वतः शामिल
+        attendance: 1,
         score: 1,
         isBusy: false,
         lastAttDate: new Date().toLocaleDateString()
@@ -265,7 +305,7 @@
       me.lastAttDate = today;
       saveNetwork();
       checkProviderSession();
-      alert('हाजिरी दर्ज हो गई! नेटवर्क में आपका एक्टिव स्टेटस अपडेट हो गया है।');
+      alert('हाजिरी दर्ज हो गई!');
     }
 
     function toggleBusyStatus() {
@@ -277,10 +317,10 @@
 
     function confirmThankYou() {
       const me = network.find(p => p.id === myId);
-      me.score += 2; // PoW स्कोर बढ़ोतरी
+      me.score += 2;
       saveNetwork();
       checkProviderSession();
-      alert('बधाई! धन्यवाद बटन दबाने से आपका PoW स्कोर 2 अंक बढ़ गया है। आपकी लिस्टिंग ऊपर आएगी।');
+      alert('बधाई! धन्यवाद बटन दबाने से आपका PoW स्कोर 2 अंक बढ़ गया है।');
     }
 
     function logoutProvider() {
@@ -291,20 +331,15 @@
       }
     }
 
-    // ग्राहक लिस्टिंग अल्गोरिदम (PoW रैंकिंग)
     function renderProviderList() {
       const container = document.getElementById('providerListContainer');
       const query = document.getElementById('filterInput').value.toLowerCase().trim();
 
-      // फिल्टरिंग
       let list = network.filter(p => {
-        return p.pin.includes(query) || p.category.toLowerCase().includes(query) || p.name.toLowerCase().includes(query);
+        const areaStr = (p.area || '').toLowerCase();
+        return p.pin.includes(query) || p.category.toLowerCase().includes(query) || p.name.toLowerCase().includes(query) || areaStr.includes(query);
       });
 
-      // गेम-थ्योरी सॉर्टिंग नियम:
-      // 1. जो व्यस्त नहीं हैं वे ऊपर
-      // 2. जिनके हफ्ते में 4+ हाजिरी हैं वे पहले
-      // 3. PoW धन्यवाद स्कोर के आधार पर अवरोही क्रम
       list.sort((a, b) => {
         if (a.isBusy !== b.isBusy) return a.isBusy ? 1 : -1;
         const aApproved = a.attendance >= 4;
@@ -314,7 +349,7 @@
       });
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align:center;color:var(--subtext);padding:30px;">इस पिन कोड या श्रेणी में कोई उपलब्ध नहीं है।</div>`;
+        container.innerHTML = `<div style="text-align:center;color:var(--subtext);padding:30px;">इस खोज में कोई उपलब्ध नहीं है।</div>`;
         return;
       }
 
@@ -329,6 +364,10 @@
           badgeHtml = `<span class="p-badge badge-pending">⚠️ अप्रूवल बाकी (${p.attendance}/4 हाज़िरी)</span>`;
         }
 
+        const mapUrl = p.coords 
+          ? `https://www.google.com/maps?q=${p.coords}` 
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.area + ' ' + p.pin)}`;
+
         return `
           <div class="provider-card">
             <div class="p-head">
@@ -340,18 +379,19 @@
             </div>
 
             <div class="p-details">
-              📍 पिन कोड: <b>${p.pin}</b> • PoW स्कोर: <b style="color:var(--blue);">${p.score}</b><br>
-              फीस/दिहाड़ी: <span class="p-rate">${p.fee || 'आपसी बातचीत'}</span>
+              📍 इलाका: <span class="p-area">${p.area || 'स्थानीय'}</span> (पिन: <b>${p.pin}</b>)<br>
+              फीस/दिहाड़ी: <span class="p-rate">${p.fee || 'आपसी बातचीत'}</span> • PoW स्कोर: <b style="color:var(--blue);">${p.score}</b>
             </div>
 
             <div class="p-actions">
               ${p.isBusy ? `
-                <div style="grid-column: span 2; text-align: center; color: var(--subtext); font-size: 11px; padding: 6px;">
+                <div style="grid-column: span 3; text-align: center; color: var(--subtext); font-size: 11px; padding: 6px;">
                   यह प्रोवाइडर अभी किसी दूसरे काम में व्यस्त है।
                 </div>
               ` : `
-                <a href="tel:${p.phone}" class="btn-action btn-call">📞 कॉल करें</a>
-                <a href="https://wa.me/91${p.phone}" target="_blank" class="btn-action btn-wa">💬 WhatsApp</a>
+                <a href="tel:${p.phone}" class="btn-action btn-call">📞 कॉल</a>
+                <a href="https://wa.me/91${p.phone}" target="_blank" class="btn-action btn-wa">💬 चैट</a>
+                <a href="${mapUrl}" target="_blank" class="btn-action btn-map">🗺️ मैप</a>
               `}
             </div>
           </div>
@@ -359,7 +399,6 @@
       }).join('');
     }
 
-    // पहला लोड
     renderProviderList();
   </script>
 </body>

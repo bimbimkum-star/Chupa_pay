@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>चुपाकाबरा - सर्विस प्रोवाइडर टेस्ट लैब</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #161f30;
+      --border: #23324a;
+      --text: #f8fafc;
+      --subtext: #94a3b8;
+      --green: #10b981;
+      --red: #ef4444;
+      --blue: #38bdf8;
+      --yellow: #fde047;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 16px; padding-bottom: 80px; }
+    h1 { font-size: 19px; font-weight: 800; color: var(--blue); margin-bottom: 4px; }
+    p.sub { font-size: 12px; color: var(--subtext); margin-bottom: 16px; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tab-btn { flex: 1; height: 42px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--subtext); font-weight: 700; font-size: 13px; cursor: pointer; }
+    .tab-btn.active { background: #0284c7; color: #fff; border-color: #0284c7; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+    .card h2 { font-size: 15px; margin-bottom: 12px; color: var(--yellow); }
+
+    .form-group { margin-bottom: 12px; }
+    label { font-size: 11px; font-weight: 700; color: var(--subtext); display: block; margin-bottom: 4px; text-transform: uppercase; }
+    input, select { width: 100%; height: 44px; background: #0b0f19; border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 0 12px; font-size: 13px; outline: none; }
+    input:focus, select:focus { border-color: var(--blue); }
+
+    .btn { width: 100%; height: 44px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.15s ease; }
+    .btn:active { transform: scale(0.98); }
+    .btn-blue { background: #0284c7; color: #fff; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-red { background: var(--red); color: #fff; }
+
+    /* प्रोवाइडर कंट्रोल पैनल */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .metric-box { background: #0b0f19; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
+    .metric-val { font-size: 20px; font-weight: 800; color: var(--blue); margin-top: 2px; }
+
+    /* प्रोवाइडर कार्ड्स (ग्राहक व्यू) */
+    .provider-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
+    .p-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .p-name { font-size: 15px; font-weight: 800; color: #fff; }
+    .p-role { font-size: 12px; color: var(--blue); font-weight: 700; }
+    .p-badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
+    .badge-approved { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .badge-pending { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .badge-busy { background: rgba(148, 163, 184, 0.2); color: var(--subtext); border: 1px solid var(--subtext); }
+
+    .p-details { font-size: 12px; color: var(--subtext); margin-bottom: 12px; line-height: 1.5; }
+    .p-rate { font-size: 13px; font-weight: 800; color: var(--yellow); }
+    .p-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-action { height: 38px; border-radius: 10px; font-size: 12px; font-weight: 800; border: none; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .btn-call { background: var(--green); color: #fff; }
+    .btn-wa { background: #25d366; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <h1>⚡ चुपाकाबरा नेटवर्क</h1>
+  <p class="sub">प्रूफ ऑफ वर्क (PoW) • ऑटोनॉमस सर्विस प्रोवाइडर लैब</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('clientTab')">🔍 काम ढूंढें (ग्राहक)</button>
+    <button class="tab-btn" onclick="showTab('providerTab')">🛠️ प्रोवाइडर खाता</button>
+  </div>
+
+  <!-- 1. ग्राहक व्यू (काम ढूँढने वाला) -->
+  <div id="clientTab" class="panel active">
+    <div class="card">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>पिन कोड या सेवा से फ़िल्टर करें:</label>
+        <input type="text" id="filterInput" placeholder="उदा. 271801 या ट्यूशन या इलेक्ट्रीशियन" onkeyup="renderProviderList()">
+      </div>
+    </div>
+
+    <div id="providerListContainer">
+      <!-- प्रोवाइडर्स की लिस्ट जावास्क्रिप्ट से लोड होगी -->
+    </div>
+  </div>
+
+  <!-- 2. प्रोवाइडर व्यू (हाजिरी और प्रोफाइल) -->
+  <div id="providerTab" class="panel">
+    <!-- अगर रजिस्टर्ड नहीं है तो फॉर्म -->
+    <div id="regBox" class="card">
+      <h2>📝 नया प्रोवाइडर पंजीकरण</h2>
+      <div class="form-group">
+        <label>पूरा नाम:</label>
+        <input type="text" id="pName" placeholder="उदा. रवि कुमार">
+      </div>
+      <div class="form-group">
+        <label>सेवा की श्रेणी:</label>
+        <select id="pCategory">
+          <option value="होम ट्यूशन (गणित/साइंस)">📚 होम ट्यूशन (गणित/साइंस)</option>
+          <option value="इलेक्ट्रीशियन व रिपेयर">⚡ इलेक्ट्रीशियन व रिपेयर</option>
+          <option value="प्लंबर व फिटिंग">🔧 प्लंबर व फिटिंग</option>
+          <option value="AC / कूलर रिपेयर">❄️ AC / कूलर रिपेयर</option>
+          <option value="राजमिस्त्री व निर्माण">🧱 राजमिस्त्री व निर्माण</option>
+          <option value="दिहाड़ी सहायक / लेबर">🏗️ दिहाड़ी सहायक / लेबर</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>पिन कोड / इलाका:</label>
+        <input type="text" id="pPin" placeholder="उदा. 271801">
+      </div>
+      <div class="form-group">
+        <label>अपेक्षित फीस / दिहाड़ी (₹):</label>
+        <input type="text" id="pFee" placeholder="उदा. ₹400/महीना या ₹500/दिन">
+      </div>
+      <div class="form-group">
+        <label>सीधा मोबाइल नंबर:</label>
+        <input type="tel" id="pPhone" placeholder="10 अंकों का WhatsApp नंबर">
+      </div>
+      <button class="btn btn-blue" onclick="registerProvider()">पंजीकरण पूरा करें</button>
+    </div>
+
+    <!-- अगर रजिस्टर्ड है तो डैशबोर्ड -->
+    <div id="dashBox" class="card" style="display:none;">
+      <h2 id="dashName">🛠️ प्रोवाइडर कंट्रोल रूम</h2>
+      
+      <div class="dashboard-grid">
+        <div class="metric-box">
+          <label>हफ्ते की हाजिरी</label>
+          <div class="metric-val" id="dispAttendance">0 / 4</div>
+        </div>
+        <div class="metric-box">
+          <label>धन्यवाद स्कोर (PoW)</label>
+          <div class="metric-val" id="dispScore">0</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <button id="btnAttendance" class="btn btn-green" onclick="markAttendance()">🟢 आज की हाजिरी दर्ज करें</button>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <button id="btnStatusToggle" class="btn btn-red" onclick="toggleBusyStatus()">🔴 स्टेटस: व्यस्त करें</button>
+      </div>
+
+      <div style="background: rgba(2,132,199,0.1); border: 1px dashed var(--blue); padding: 12px; border-radius: 12px; margin-bottom: 12px;">
+        <label style="color:var(--blue);">काम और पैसे मिलने के बाद क्लिक करें:</label>
+        <button class="btn btn-blue" style="margin-top: 6px;" onclick="confirmThankYou()">🙏 धन्यवाद! काम पूरा हुआ</button>
+        <p style="font-size: 10px; color: var(--subtext); margin-top: 4px;">* यह दबाने से नेटवर्क में आपका रैंक ऊपर जाएगा।</p>
+      </div>
+
+      <button onclick="logoutProvider()" style="background:none; border:none; color:var(--red); font-size:12px; font-weight:700; width:100%; cursor:pointer;">खाता रीसेट / लॉगआउट करें</button>
+    </div>
+  </div>
+
+  <script>
+    // डमी इनिशियल नेटवर्क डेटा (यदि स्टोरेज खाली हो)
+    const initialNetwork = [
+      { id: 'p1', name: 'सुरेश मौर्या', category: 'इलेक्ट्रीशियन व रिपेयर', pin: '271801', fee: '₹250 विज़िट', phone: '9876543210', attendance: 5, score: 14, isBusy: false, lastAttDate: '' },
+      { id: 'p2', name: 'अमित वर्मा', category: 'होम ट्यूशन (गणित/साइंस)', pin: '271801', fee: '₹1200 / महीना', phone: '9876543211', attendance: 4, score: 9, isBusy: false, lastAttDate: '' },
+      { id: 'p3', name: 'कल्लू मिस्त्री', category: 'राजमिस्त्री व निर्माण', pin: '271801', fee: '₹650 / दिन', phone: '9876543212', attendance: 2, score: 3, isBusy: false, lastAttDate: '' }
+    ];
+
+    let network = JSON.parse(localStorage.getItem('chupa_network')) || initialNetwork;
+    let myId = localStorage.getItem('chupa_my_provider_id') || null;
+
+    function saveNetwork() {
+      localStorage.setItem('chupa_network', JSON.stringify(network));
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if (tabId === 'clientTab') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        renderProviderList();
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        checkProviderSession();
+      }
+    }
+
+    function registerProvider() {
+      const name = document.getElementById('pName').value.trim();
+      const category = document.getElementById('pCategory').value;
+      const pin = document.getElementById('pPin').value.trim();
+      const fee = document.getElementById('pFee').value.trim();
+      const phone = document.getElementById('pPhone').value.trim();
+
+      if (!name || !pin || !phone) {
+        alert('कृपया नाम, पिन कोड और मोबाइल नंबर अवश्य भरें!');
+        return;
+      }
+
+      const newId = 'p_' + Date.now();
+      const newProvider = {
+        id: newId,
+        name,
+        category,
+        pin,
+        fee,
+        phone,
+        attendance: 1, // आज की हाजिरी स्वतः शामिल
+        score: 1,
+        isBusy: false,
+        lastAttDate: new Date().toLocaleDateString()
+      };
+
+      network.push(newProvider);
+      myId = newId;
+      localStorage.setItem('chupa_my_provider_id', myId);
+      saveNetwork();
+      checkProviderSession();
+    }
+
+    function checkProviderSession() {
+      const regBox = document.getElementById('regBox');
+      const dashBox = document.getElementById('dashBox');
+
+      if (!myId) {
+        regBox.style.display = 'block';
+        dashBox.style.display = 'none';
+        return;
+      }
+
+      const me = network.find(p => p.id === myId);
+      if (!me) {
+        myId = null;
+        localStorage.removeItem('chupa_my_provider_id');
+        regBox.style.display = 'block';
+        dashBox.style.display = 'none';
+        return;
+      }
+
+      regBox.style.display = 'none';
+      dashBox.style.display = 'block';
+
+      document.getElementById('dashName').innerText = `🛠️ ${me.name} (${me.category})`;
+      document.getElementById('dispAttendance').innerText = `${me.attendance} / 4`;
+      document.getElementById('dispScore').innerText = `${me.score} अंक`;
+
+      const busyBtn = document.getElementById('btnStatusToggle');
+      if (me.isBusy) {
+        busyBtn.innerText = "🟢 स्टेटस: उपलब्ध (एक्टिव) करें";
+        busyBtn.className = "btn btn-green";
+      } else {
+        busyBtn.innerText = "🔴 स्टेटस: व्यस्त करें";
+        busyBtn.className = "btn btn-red";
+      }
+    }
+
+    function markAttendance() {
+      const me = network.find(p => p.id === myId);
+      const today = new Date().toLocaleDateString();
+      if (me.lastAttDate === today) {
+        alert('आज की हाजिरी पहले ही दर्ज हो चुकी है!');
+        return;
+      }
+      me.attendance += 1;
+      me.lastAttDate = today;
+      saveNetwork();
+      checkProviderSession();
+      alert('हाजिरी दर्ज हो गई! नेटवर्क में आपका एक्टिव स्टेटस अपडेट हो गया है।');
+    }
+
+    function toggleBusyStatus() {
+      const me = network.find(p => p.id === myId);
+      me.isBusy = !me.isBusy;
+      saveNetwork();
+      checkProviderSession();
+    }
+
+    function confirmThankYou() {
+      const me = network.find(p => p.id === myId);
+      me.score += 2; // PoW स्कोर बढ़ोतरी
+      saveNetwork();
+      checkProviderSession();
+      alert('बधाई! धन्यवाद बटन दबाने से आपका PoW स्कोर 2 अंक बढ़ गया है। आपकी लिस्टिंग ऊपर आएगी।');
+    }
+
+    function logoutProvider() {
+      if (confirm('क्या आप लॉगआउट करना चाहते हैं?')) {
+        localStorage.removeItem('chupa_my_provider_id');
+        myId = null;
+        checkProviderSession();
+      }
+    }
+
+    // ग्राहक लिस्टिंग अल्गोरिदम (PoW रैंकिंग)
+    function renderProviderList() {
+      const container = document.getElementById('providerListContainer');
+      const query = document.getElementById('filterInput').value.toLowerCase().trim();
+
+      // फिल्टरिंग
+      let list = network.filter(p => {
+        return p.pin.includes(query) || p.category.toLowerCase().includes(query) || p.name.toLowerCase().includes(query);
+      });
+
+      // गेम-थ्योरी सॉर्टिंग नियम:
+      // 1. जो व्यस्त नहीं हैं वे ऊपर
+      // 2. जिनके हफ्ते में 4+ हाजिरी हैं वे पहले
+      // 3. PoW धन्यवाद स्कोर के आधार पर अवरोही क्रम
+      list.sort((a, b) => {
+        if (a.isBusy !== b.isBusy) return a.isBusy ? 1 : -1;
+        const aApproved = a.attendance >= 4;
+        const bApproved = b.attendance >= 4;
+        if (aApproved !== bApproved) return aApproved ? -1 : 1;
+        return b.score - a.score;
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align:center;color:var(--subtext);padding:30px;">इस पिन कोड या श्रेणी में कोई उपलब्ध नहीं है।</div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(p => {
+        const isApproved = p.attendance >= 4;
+        let badgeHtml = '';
+        if (p.isBusy) {
+          badgeHtml = `<span class="p-badge badge-busy">🔴 व्यस्त</span>`;
+        } else if (isApproved) {
+          badgeHtml = `<span class="p-badge badge-approved">✓ सत्यापित (4/4 हाज़िरी)</span>`;
+        } else {
+          badgeHtml = `<span class="p-badge badge-pending">⚠️ अप्रूवल बाकी (${p.attendance}/4 हाज़िरी)</span>`;
+        }
+
+        return `
+          <div class="provider-card">
+            <div class="p-head">
+              <div>
+                <div class="p-name">${p.name}</div>
+                <div class="p-role">${p.category}</div>
+              </div>
+              <div>${badgeHtml}</div>
+            </div>
+
+            <div class="p-details">
+              📍 पिन कोड: <b>${p.pin}</b> • PoW स्कोर: <b style="color:var(--blue);">${p.score}</b><br>
+              फीस/दिहाड़ी: <span class="p-rate">${p.fee || 'आपसी बातचीत'}</span>
+            </div>
+
+            <div class="p-actions">
+              ${p.isBusy ? `
+                <div style="grid-column: span 2; text-align: center; color: var(--subtext); font-size: 11px; padding: 6px;">
+                  यह प्रोवाइडर अभी किसी दूसरे काम में व्यस्त है।
+                </div>
+              ` : `
+                <a href="tel:${p.phone}" class="btn-action btn-call">📞 कॉल करें</a>
+                <a href="https://wa.me/91${p.phone}" target="_blank" class="btn-action btn-wa">💬 WhatsApp</a>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // पहला लोड
+    renderProviderList();
+  </script>
+</body>
+</html>

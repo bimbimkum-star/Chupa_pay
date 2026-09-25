@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#f97316">
+  <title>चुपाकाबरा-खाता • लेन - देन</title>
+
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body oncontextmenu="return false;">
+
+  <!-- ================= 0. ऐप पिन लॉक स्क्रीन (App Security Lock Screen) ================= -->
+  <div id="appPinLockOverlay" class="pin-lock-screen" style="display:none;">
+    <div class="pin-box">
+      <img src="logo.png" style="width:68px;height:68px;margin-bottom:10px;object-fit:contain;" alt="Logo">
+      <h3 style="margin:0 0 6px 0;font-size:18px;font-weight:800;color:#0f172a;">🔐 चुपाकाबरा सुरक्षा लॉक</h3>
+      <p style="font-size:12px;color:#64748b;margin-bottom:16px;">दुकान बहीखाता खोलने हेतु अपना 4-अंकीय पिन दर्ज करें</p>
+      <input type="password" id="unlockAppPinInput" maxlength="4" class="d-input" placeholder="••••" style="text-align:center;font-size:24px;letter-spacing:10px;height:48px;background:#f8fafc;">
+      <button type="button" class="btn-save" style="width:100%;margin-top:14px;height:46px;" onclick="verifyAppUnlockPin()">अनलॉक करें 🔓</button>
+    </div>
+  </div>
+
+  <!-- ================= 1. ऊपर केसरिया भाग (Top Saffron Zone) ================= -->
+  <header class="zone-saffron">
+    <div class="saffron-top-row">
+      <!-- बाएँ: Sign-in प्रोफाइल ट्रिगर बटन -->
+      <button type="button" class="btn-signin-circle" onclick="openProfileDrawer()" title="प्रोफाइल व सेटिंग्स">
+        <span class="signin-icon">👤</span>
+        <span class="signin-label" id="dispNavAuthLabel">Sign-in</span>
+      </button>
+
+      <!-- बीच: स्थायी ब्रांड नाम (Permanent Brand Name) -->
+      <div class="header-brand-center">
+        <h1 class="brand-heading">चुपाकाबरा-खाता</h1>
+        <p class="brand-subheading">लेन - देन</p>
+      </div>
+
+      <!-- दाएँ: बिना बॉक्स वाला फ्लोटिंग AI अवतार (डायरेक्ट अपलोड बंद - केवल साइन-इन से उभरेगा) -->
+      <div class="avatar-floating-wrap" onclick="openProfileDrawer()" title="प्रोफाइल खाता">
+        <img id="floatingAiAvatar" src="logo.png" class="floating-avatar-img" alt="अवतार">
+        <div class="avatar-live-pulse" id="avatarOnlineStatus"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 2. बीच का श्वेत भाग (Middle Pure White Hub) ================= -->
+  <section class="zone-white">
+    <div class="chakra-hub-card">
+      
+      <!-- केंद्र में 24 तीलियों वाला अशोक चक्र -->
+      <div class="ashoka-chakra-center">
+        <svg viewBox="0 0 100 100" class="chakra-svg" aria-label="अशोक चक्र">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#000080" stroke-width="3"/>
+          <circle cx="50" cy="50" r="8" fill="#000080"/>
+          <g stroke="#000080" stroke-width="1.8">
+            <line x1="50" y1="50" x2="50" y2="4"/><line x1="50" y1="50" x2="50" y2="96"/>
+            <line x1="50" y1="50" x2="4" y2="50"/><line x1="50" y1="50" x2="96" y2="50"/>
+            <line x1="50" y1="50" x2="17.5" y2="17.5"/><line x1="50" y1="50" x2="82.5" y2="82.5"/>
+            <line x1="50" y1="50" x2="17.5" y2="82.5"/><line x1="50" y1="50" x2="82.5" y2="17.5"/>
+            <line x1="50" y1="50" x2="27.5" y2="7.5"/><line x1="50" y1="50" x2="72.5" y2="92.5"/>
+            <line x1="50" y1="50" x2="7.5" y2="27.5"/><line x1="50" y1="50" x2="92.5" y2="72.5"/>
+            <line x1="50" y1="50" x2="7.5" y2="72.5"/><line x1="50" y1="50" x2="92.5" y2="27.5"/>
+            <line x1="50" y1="50" x2="27.5" y2="92.5"/><line x1="50" y1="50" x2="72.5" y2="7.5"/>
+            <line x1="50" y1="50" x2="38.3" y2="5.5"/><line x1="50" y1="50" x2="61.7" y2="94.5"/>
+            <line x1="50" y1="50" x2="5.5" y2="38.3"/><line x1="50" y1="50" x2="94.5" y2="61.7"/>
+            <line x1="50" y1="50" x2="5.5" y2="61.7"/><line x1="50" y1="50" x2="94.5" y2="38.3"/>
+            <line x1="50" y1="50" x2="38.3" y2="94.5"/><line x1="50" y1="50" x2="61.7" y2="5.5"/>
+          </g>
+        </svg>
+        <span class="chakra-label">सत्यमेव जयते</span>
+      </div>
+
+      <!-- 4 मुख्य वित्तीय चक्र (कोई डुप्लीकेट ग्राहक नहीं) -->
+      <!-- 1. ऊपर-बाएँ: गति (Quick Counter Actions) -->
+      <div class="node-circle node-gati" onclick="showQuickGati()">
+        <div class="node-icon">⚡</div>
+        <div class="node-title">गति</div>
+      </div>
+
+      <!-- 2. ऊपर-दाएँ: मंडी (Agmarknet Live Mandi) -->
+      <div class="node-circle node-mandi" onclick="fetchMandiRatesModal()">
+        <div class="node-icon">🌾</div>
+        <div class="node-title">मंडी</div>
+      </div>
+
+      <!-- 3. नीचे-बाएँ: ग्राहक (बहीखाता सूची व्यूअर) -->
+      <div class="node-circle node-grahak" onclick="openCustomerListModal()">
+        <div class="node-icon">👥</div>
+        <div class="node-title">ग्राहक</div>
+      </div>
+
+      <!-- 4. नीचे-दाएँ: बैंक (लॉक्ड - जल्द ही) -->
+      <div class="node-circle node-bank" onclick="openLockedBankModal()">
+        <div class="node-icon">🏛️</div>
+        <div class="node-title">बैंक</div>
+        <span class="badge-locked">🔐 जल्द ही</span>
+      </div>
+
+    </div>
+
+    <!-- गद्दी लाइव संतुलन स्थिति -->
+    <div class="balance-strip">
+      <div class="b-box">
+        <small>कुल लेना है (बाज़ार उधार)</small>
+        <strong id="dispTotalGet" style="color:var(--red);">₹0</strong>
+      </div>
+      <div class="b-divider"></div>
+      <div class="b-box">
+        <small>कुल देना है (आवक / जमा)</small>
+        <strong id="dispTotalGive" style="color:var(--india-green);">₹0</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3. नीचे का हल्का हरा भाग (Bottom Light Green Zone) ================= -->
+  <footer class="zone-green">
+    <div class="green-flex-container">
+      
+      <!-- बाएँ: Service (सेवाएँ) ट्रिगर बटन -->
+      <div class="service-ladder-block">
+        <button type="button" class="btn-service-ladder" onclick="toggleServiceAccordion()">
+          <span class="ladder-icon">🛡️</span>
+          <span class="ladder-text">Service</span>
+        </button>
+        <div class="ladder-subtext">व्यावसायिक सेवाएँ ➔</div>
+      </div>
+
+      <!-- दाएँ: मुख्य कार्यक्षेत्र - केवल ग्राहक काउंट (पूरी लिस्ट बंद, प्राइवेसी सुरक्षित) -->
+      <div class="display-workspace-block" id="workspaceDisplay" onclick="openCustomerListModal()" style="cursor:pointer;" title="क्लिक करके पूरा बहीखाता देखें">
+        <div class="cust-count-badge-card">
+          <div style="font-size:32px;margin-bottom:4px;">📒</div>
+          <div style="font-size:15px;font-weight:800;color:var(--text-main);" id="dispCustomerCountText">0 ग्राहक खाते दर्ज</div>
+          <p style="font-size:11px;color:var(--text-muted);margin-top:2px;">खाते देखने व हिसाब मिलाने हेतु यहाँ टैप करें ➔</p>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- स्क्रीन पर केवल 1 मुख्य '＋ नया ग्राहक' बटन -->
+  <button type="button" class="fab-tricolor" onclick="openNewCustomerModal()" title="नया खाता जोड़ें">
+    ＋ नया ग्राहक
+  </button>
+
+  <!-- ================= 4. प्रोफाइल स्लाइडिंग ड्रॉअर (Email Gate + No Meter + Pin Setup) ================= -->
+  <div class="drawer-overlay" id="profileDrawerOverlay" onclick="closeProfileDrawer()"></div>
+  <aside class="profile-drawer" id="profileDrawer">
+    <div class="drawer-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="drawer-avatar-preview">
+          <img id="drawerAvatarImg" src="logo.png" alt="प्रोफाइल">
+        </div>
+        <div>
+          <h2 id="dispMerchantName" style="font-size:15px;font-weight:800;color:#0f172a;margin:0;">व्यापारी खाता</h2>
+          <p style="font-size:11px;color:#64748b;margin:0;">चुपाकाबरा डिजिटल गद्दी</p>
+        </div>
+      </div>
+      <button type="button" class="btn-close-sm" onclick="closeProfileDrawer()">✕</button>
+    </div>
+
+    <!-- स्क्रॉलेबल बॉडी (ताकि नीचे के सेव व लॉगआउट बटन कभी न कटें) -->
+    <div class="drawer-body">
+      
+      <!-- 1. ईमेल लॉगिन गेट (बिना लॉगिन अंदर नहीं जा सकते) -->
+      <div id="authGateSection" class="auth-gate-card">
+        <div id="loggedOutBox">
+          <h3 style="font-size:13px;font-weight:800;color:#c2410c;margin:0 0 6px 0;">🔐 प्रोफाइल सुरक्षा: ईमेल लॉगिन अनिवार्य</h3>
+          <p style="font-size:11px;color:#64748b;margin:0 0 10px 0;">डेटा क्लाउड से सिंक रहेगा और कभी नहीं खोएगा।</p>
+          <input type="email" id="inputAuthEmail" class="d-input" placeholder="अपना ईमेल दर्ज करें...">
+          <button type="button" class="btn-save" style="width:100%;margin-top:6px;" onclick="handleOneTimeEmailLogin()">ईमेल से सुरक्षित लॉगिन करें ➔</button>
+        </div>
+
+        <div id="loggedInBox" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px;">
+          <div style="font-size:10px;font-weight:800;color:#166534;">✓ क्लाउड सिंक सक्रिय (No Data Loss)</div>
+          <div id="dispLoggedEmailTxt" style="font-size:12px;font-weight:800;color:#0f172a;margin-top:2px;">user@example.com</div>
+        </div>
+      </div>
+
+      <!-- 2. प्रोफाइल इनपुट फॉर्म (लॉगिन के बाद ही दिखाई देगा) -->
+      <div id="profileFormFields" style="display:none;margin-top:14px;">
+        <div class="drawer-field">
+          <label>व्यापारी का नाम *</label>
+          <input type="text" id="profName" class="d-input" placeholder="उदा. रवि कुमार">
+        </div>
+
+        <div class="drawer-field">
+          <label>जेंडर (Gender) *</label>
+          <select id="profGender" class="d-input" style="font-weight:700;">
+            <option value="">-- जेंडर चुनें --</option>
+            <option value="पुरुष">पुरुष (Male)</option>
+            <option value="महिला">महिला (Female)</option>
+            <option value="अन्य">अन्य (Other)</option>
+          </select>
+        </div>
+
+        <div class="drawer-field">
+          <label>दुकान / फर्म का नाम *</label>
+          <input type="text" id="profShop" class="d-input" placeholder="उदा. माँ भवानी ट्रेडर्स">
+        </div>
+
+        <div class="drawer-field">
+          <label>पेशा (Profession)</label>
+          <input type="text" id="profProfession" class="d-input" placeholder="उदा. किराना, थेरेपिस्ट, हार्डवेयर">
+        </div>
+
+        <div class="drawer-field">
+          <label>मोबाइल नंबर *</label>
+          <input type="tel" id="profPhone" maxlength="10" class="d-input" placeholder="10 अंकों का फोन नंबर">
+        </div>
+
+        <div class="drawer-field">
+          <label>GST नंबर (वैकल्पिक)</label>
+          <input type="text" id="profGst" class="d-input" placeholder="GSTIN नंबर यदि हो">
+        </div>
+
+        <div class="drawer-field">
+          <label>दुकान का UPI ID (QR भुगतान हेतु) *</label>
+          <input type="text" id="profUpi" class="d-input" placeholder="उदा. yourname@upi">
+        </div>
+
+        <!-- QR पोस्टर डाउनलोड -->
+        <button type="button" class="btn-drawer-action" style="background:#e0f2fe;color:#0284c7;" onclick="openRoyalQrModal()">
+          ▣ QR Code Poster Download (रॉयल पोस्टर)
+        </button>
+
+        <!-- 3. मीटर हटाया गया ➔ केवल 'ऐप सुरक्षा पिन सेट करें' -->
+        <div class="pin-setup-box" style="margin-top:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:12px;">
+          <h4 style="font-size:12.5px;font-weight:800;color:#1e40af;margin:0 0 4px 0;">🔐 ऐप सुरक्षा पिन सेट करें</h4>
+          <p style="font-size:10.5px;color:#3b82f6;margin:0 0 10px 0;">पिन सेट करते ही ऐप से बाहर जाकर घुसने पर यही 4-अंकीय पिन माँगा जाएगा।</p>
+          <div style="display:flex;gap:8px;">
+            <input type="password" id="inputSetupPin" maxlength="4" class="d-input" placeholder="••••" style="text-align:center;letter-spacing:6px;margin:0;height:42px;">
+            <button type="button" class="btn-save" style="background:#1e40af;padding:0 14px;font-size:12px;" onclick="saveAppSecurityPin()">पिन सेट करें</button>
+          </div>
+          <div id="dispPinActiveStatus" style="font-size:10.5px;font-weight:700;margin-top:6px;color:#15803d;"></div>
+        </div>
+
+        <!-- 4. नीचे सुरक्षित करें व लॉगआउट बटन (हमेशा साफ़ दिखने वाले) -->
+        <div class="drawer-footer-actions">
+          <button type="button" class="btn-save-profile" onclick="saveProfileData()">प्रोफाइल सुरक्षित करें ✓</button>
+          <button type="button" class="btn-logout" onclick="logoutMerchant()">Logout 🚪</button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ================= 5. सभी मोडाल्स ================= -->
+
+  <!-- A. ग्राहक सूची मोडल (क्लिक करने पर ही अंदर दिखेगी) -->
+  <div class="modal" id="customerListModal">
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h2 style="font-size:16px;font-weight:800;margin:0;">📒 दुकान ग्राहक बहीखाता</h2>
+        <button type="button" class="btn-close-sm" onclick="closeModal('customerListModal')">✕</button>
+      </div>
+      <div id="fullCustomerLedgerContainer" style="display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto;"></div>
+      <button type="button" class="btn-save" style="width:100%;margin-top:12px;" onclick="closeModal('customerListModal');openNewCustomerModal();">＋ नया ग्राहक खाता खोलें</button>
+    </div>
+  </div>
+
+  <!-- B. नया ग्राहक मोडल -->
+  <div class="modal" id="newCustomerModal">
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h2 style="font-size:16px;font-weight:800;margin:0;">नया ग्राहक खाता खोलें</h2>
+        <button type="button" class="btn-close-sm" onclick="closeModal('newCustomerModal')">✕</button>
+      </div>
+      <div class="drawer-field">
+        <label>ग्राहक का पूरा नाम *</label>
+        <input type="text" id="newCustName" class="d-input" placeholder="उदा. रमेश चंद्र">
+      </div>
+      <div class="drawer-field">
+        <label>मोबाइल नंबर (10 अंक) *</label>
+        <input type="tel" id="newCustPhone" maxlength="10" class="d-input" placeholder="9876543210">
+      </div>
+      <div class="modalrow">
+        <button type="button" class="btn-cancel" onclick="closeModal('newCustomerModal')">रद्द करें</button>
+        <button type="button" class="btn-save" onclick="saveNewCustomerRecord()">खाता खोलें ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- C. लेन-देन मोडल (उधार / भुगतान) -->
+  <div class="modal" id="txEntryModal">
+    <div class="box">
+      <h2 id="txEntryTitle" style="font-size:16px;font-weight:800;margin-bottom:12px;">उधार दर्ज करें</h2>
+      <div class="drawer-field">
+        <label>राशि (₹) *</label>
+        <input type="number" id="txAmountInput" class="d-input" placeholder="₹0.00">
+      </div>
+      <div class="drawer-field">
+        <label>विवरण (Note)</label>
+        <input type="text" id="txNoteInput" class="d-input" placeholder="उदा. राशन, बीज, नकद">
+      </div>
+      <div class="modalrow">
+        <button type="button" class="btn-cancel" onclick="closeModal('txEntryModal')">रद्द करें</button>
+        <button type="button" class="btn-save" onclick="saveCustomerTxRecord()">हिसाब सुरक्षित करें ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- D. बैंक लॉक्ड मोडल -->
+  <div class="modal" id="lockedBankModal">
+    <div class="box" style="text-align:center;">
+      <div style="font-size:42px;margin-bottom:6px;">🏛️</div>
+      <span class="badge-locked" style="font-size:11px;padding:3px 10px;">🔐 जल्द ही (Coming Soon)</span>
+      <h2 style="font-size:17px;font-weight:800;margin-top:10px;">व्यापारी बैंकिंग व चालू खाता</h2>
+      <p style="font-size:12px;color:#64748b;line-height:1.6;margin:8px 0 16px;">
+        भारत के दुकानदारों के लिए जीरो-बैलेंस डिजिटल चालू खाता सीधे आपकी गद्दी से जोड़ा जा रहा है।
+      </p>
+      <button type="button" class="btn-save" style="width:100%;" onclick="closeModal('lockedBankModal')">समझ गया ✓</button>
+    </div>
+  </div>
+
+  <!-- E. रॉयल UPI QR मोडल -->
+  <div class="modal" id="royalQrModal">
+    <div class="box" style="background:linear-gradient(145deg,#0f172a,#1e1b4b);border:2px solid #f59e0b;color:#fff;text-align:center;">
+      <h3 style="font-size:18px;font-weight:800;color:#fff;" id="qrPosterShopTitle">दुकान QR</h3>
+      <small style="font-size:11px;color:#fde047;">All-in-One सुरक्षित UPI मर्चेंट QR</small>
+      
+      <div style="background:#fff;border-radius:18px;padding:12px;margin:14px auto;display:inline-block;">
+        <canvas id="posterQrCanvas" width="260" height="260" style="display:block;border-radius:8px;"></canvas>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.1);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:800;color:#93c5fd;margin-bottom:12px;" id="qrPosterUpiText">
+        UPI: उपलब्ध नहीं
+      </div>
+      <div style="font-size:11px;opacity:0.8;margin-bottom:14px;">GPay • PhonePe • Paytm • BHIM</div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button type="button" class="btn-cancel" onclick="closeModal('royalQrModal')">बंद करें</button>
+        <button type="button" class="btn-save" style="background:#16a34a;" onclick="downloadPosterCanvas()">📥 पोस्टर डाउनलोड</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- F. सेवाओं की सीढ़ी मोडल (Services Modal) -->
+  <div class="modal" id="servicesAccordionModal">
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <h2 style="font-size:16px;font-weight:800;margin:0;">🛡️ व्यावसायिक व नागरिक सेवाएँ</h2>
+        <button type="button" class="btn-close-sm" onclick="closeModal('servicesAccordionModal')">✕</button>
+      </div>
+
+      <div class="services-list-vertical">
+        <!-- 1. क्लिनिक 50 Rx -->
+        <div class="srv-row" onclick="openClinicDesk()">
+          <div class="srv-ico" style="background:#ecfdf5;color:#059669;">🩺</div>
+          <div class="srv-txt">
+            <h3>क्लिनिकल व पर्चा डेस्क (50 Rx)</h3>
+            <p>डॉक्टर प्रोफाइल • 50 शैलियाँ • ℞ प्रिंट व WhatsApp</p>
+          </div>
+          <span class="srv-arrow">➔</span>
+        </div>
+
+        <!-- 2. फार्मेसी व दवा काउंटर -->
+        <div class="srv-row" onclick="openPharmaDesk()">
+          <div class="srv-ico" style="background:#e0f2fe;color:#0284c7;">💊</div>
+          <div class="srv-txt">
+            <h3>फार्मेसी व दवा काउंटर</h3>
+            <p>बैच, एक्सपायरी व Google Maps लाइव लोकेशन</p>
+          </div>
+          <span class="srv-arrow">➔</span>
+        </div>
+
+        <!-- 3. PoW कारीगर नेटवर्क -->
+        <div class="srv-row" onclick="openPoWNetwork()">
+          <div class="srv-ico" style="background:#0f172a;color:#38bdf8;">⚡</div>
+          <div class="srv-txt">
+            <h3>PoW कारीगर नेटवर्क डायरेक्टरी</h3>
+            <p>पिन कोड अनुसार मिस्त्री, इलेक्ट्रीशियन, ट्यूशन</p>
+          </div>
+          <span class="srv-arrow">➔</span>
+        </div>
+
+        <!-- 4. कारीगर कंट्रोल रूम (24h लॉक) -->
+        <div class="srv-row" onclick="openProviderDesk()">
+          <div class="srv-ico" style="background:#fef3c7;color:#b45309;">🛠️</div>
+          <div class="srv-txt">
+            <h3>कारीगर कंट्रोल रूम (इस फोन हेतु)</h3>
+            <p>1 फोन = 1 प्रोफाइल • हाजिरी व 24h लॉक</p>
+          </div>
+          <span class="srv-arrow">➔</span>
+        </div>
+
+        <!-- 5. टर्टलमिंट बीमा व व्यापार लोन -->
+        <div class="srv-row" onclick="openTurtlemintInsurance()">
+          <div class="srv-ico" style="background:#ecfdf5;color:#059669;">🛡️</div>
+          <div class="srv-txt">
+            <h3>दुकान, वाहन, स्वास्थ्य बीमा व लोन</h3>
+            <p>प्रमाणित Turtlemint PoSP प्रोफाइल</p>
+          </div>
+          <span class="srv-arrow">पोर्टल ↗</span>
+        </div>
+
+        <!-- 6. 12 सरकारी पोर्टल -->
+        <div class="srv-row" onclick="openGovPortals()">
+          <div class="srv-ico" style="background:#1e293b;color:#fde047;">🏛️</div>
+          <div class="srv-txt">
+            <h3>12 आवश्यक सरकारी पोर्टल</h3>
+            <p>आयुष्मान, भूलेख, राशन पर्ची, PM-किसान आदि</p>
+          </div>
+          <span class="srv-arrow">➔</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- प्रिंट एरिया (Rx, मेमो, इनवॉइस) -->
+  <div id="invoicePrintArea"></div>
+  <div id="clinicPrintArea"></div>
+  <div id="pharmaPrintArea"></div>
+  <div class="toast" id="toastMsg"></div>
+
+  <!-- मॉड्यूलर स्क्रिप्ट्स -->
+  <script src="services.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

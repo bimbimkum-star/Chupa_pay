@@ -1,0 +1,643 @@
+/* =========================================================
+   CHUPAKABRA KHATA: MASTER STYLESHEET (TRICOLOR FINTECH)
+   थीम: ऊपर केसरिया • बीच में श्वेत • नीचे हरा
+   ========================================================= */
+
+:root {
+  --saffron: #ea580c;
+  --saffron-grad: linear-gradient(135deg, #c2410c, #ea580c 50%, #f97316);
+  --white-bg: #ffffff;
+  --light-green: #ecfdf5;
+  --green-border: #a7f3d0;
+  --india-green: #059669;
+  --chakra-blue: #000080;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-line: #e2e8f0;
+  --red: #e11d48;
+  --red-bg: #fff1f2;
+  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 16px 36px -10px rgba(15, 23, 42, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: #f8fafc;
+  color: var(--text-main);
+  min-height: 100vh;
+  padding-bottom: 90px;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* =========================================================
+   0. ऐप सुरक्षा पिन लॉक स्क्रीन (App Security Lock Screen)
+   ========================================================= */
+.pin-lock-screen {
+  position: fixed;
+  inset: 0;
+  background: #0f172a;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.pin-box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 24px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================================
+   1. ऊपर केसरिया भाग (Top Saffron Zone)
+   ========================================================= */
+.zone-saffron {
+  background: var(--saffron-grad);
+  color: #fff;
+  padding: 16px 16px 24px;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 8px 24px rgba(194, 65, 12, 0.28);
+  position: relative;
+  z-index: 10;
+}
+
+.saffron-top-row {
+  max-width: 580px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Sign-in प्रोफाइल बटन (बाएँ) */
+.btn-signin-circle {
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.btn-signin-circle:active { transform: scale(0.95); }
+.signin-icon { font-size: 15px; }
+.signin-label { font-size: 11.5px; font-weight: 800; letter-spacing: 0.3px; }
+
+/* बीच में स्थायी ब्रांड नाम */
+.header-brand-center {
+  text-align: center;
+}
+.brand-heading {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.brand-subheading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffedd5;
+  margin-top: 2px;
+}
+
+/* दाएँ: बिना बॉक्स वाला पारदर्शी फ्लोटिंग AI अवतार */
+.avatar-floating-wrap {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.floating-avatar-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+  animation: floatBreathing 3s ease-in-out infinite;
+  border: none;
+  background: transparent;
+}
+@keyframes floatBreathing {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.04); }
+}
+.avatar-live-pulse {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+/* =========================================================
+   2. बीच का श्वेत भाग (Middle Pure White Hub)
+   ========================================================= */
+.zone-white {
+  max-width: 580px;
+  margin: -10px auto 0;
+  padding: 0 16px;
+  position: relative;
+  z-index: 12;
+}
+
+.chakra-hub-card {
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 26px;
+  padding: 22px 16px;
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 16px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* केंद्र में अशोक चक्र वाटरमार्क */
+.ashoka-chakra-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 104px;
+  height: 104px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+}
+.chakra-svg {
+  width: 82px;
+  height: 82px;
+  animation: rotateChakraSlow 40s linear infinite;
+}
+@keyframes rotateChakraSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.chakra-label {
+  font-size: 8px;
+  font-weight: 800;
+  color: var(--chakra-blue);
+  letter-spacing: 1px;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+/* 4 मुख्य वित्तीय चक्र */
+.node-circle {
+  background: #fff;
+  border: 1.5px solid var(--border-line);
+  border-radius: 20px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+  transition: all 0.18s ease;
+  position: relative;
+  z-index: 2;
+}
+.node-circle:active {
+  transform: scale(0.96);
+  border-color: var(--chakra-blue);
+}
+.node-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+.node-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.node-gati { border-color: #fdba74; background: linear-gradient(180deg, #fff, #fff7ed); }
+.node-mandi { border-color: #bbf7d0; background: linear-gradient(180deg, #fff, #f0fdf4); }
+.node-grahak { border-color: #93c5fd; background: linear-gradient(180deg, #fff, #eff6ff); }
+.node-bank { border-color: #cbd5e1; background: #f8fafc; }
+
+.badge-locked {
+  display: inline-block;
+  font-size: 8.5px;
+  font-weight: 800;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-top: 3px;
+}
+
+/* गद्दी संतुलन पट्टी */
+.balance-strip {
+  background: #fff;
+  border: 1px solid var(--border-line);
+  border-radius: 18px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+.b-box { flex: 1; text-align: center; }
+.b-box small { font-size: 10.5px; font-weight: 700; color: var(--text-muted); display: block; }
+.b-box strong { font-size: 18px; font-weight: 800; display: block; margin-top: 2px; }
+.b-divider { width: 1px; height: 32px; background: var(--border-line); }
+
+/* =========================================================
+   3. नीचे का हल्का हरा भाग (Bottom Light Green Zone)
+   ========================================================= */
+.zone-green {
+  max-width: 580px;
+  margin: 14px auto 0;
+  padding: 0 16px;
+}
+
+.green-flex-container {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+}
+
+/* बाएँ: Service बटन */
+.service-ladder-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.btn-service-ladder {
+  width: 100%;
+  height: 88px;
+  border: 2px solid var(--green-border);
+  background: var(--light-green);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.1);
+  transition: transform 0.15s ease;
+}
+.btn-service-ladder:active { transform: scale(0.96); }
+.ladder-icon { font-size: 26px; }
+.ladder-text { font-size: 13.5px; font-weight: 800; color: var(--india-green); }
+.ladder-subtext {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* दाएँ: प्राइवेसी सुरक्षित ग्राहक संख्या कार्ड */
+.display-workspace-block {
+  background: #fff;
+  border: 1px solid var(--border-line);
+  border-radius: 20px;
+  padding: 14px;
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s ease;
+}
+.display-workspace-block:active { background: #f8fafc; }
+
+.cust-count-badge-card {
+  text-align: center;
+}
+
+/* तैरता हुआ '＋ नया ग्राहक' बटन */
+.fab-tricolor {
+  position: fixed;
+  right: 18px;
+  bottom: 24px;
+  height: 50px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--india-green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(5, 150, 105, 0.38);
+  cursor: pointer;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s ease;
+}
+.fab-tricolor:active { transform: scale(0.96); }
+
+/* =========================================================
+   4. प्रोफाइल साइड ड्रॉअर (बटन फिक्स + स्क्रॉल)
+   ========================================================= */
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+.drawer-overlay.active { display: block; }
+
+.profile-drawer {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 88%;
+  max-width: 370px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 10px 0 35px rgba(0,0,0,0.25);
+  z-index: 1001;
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.profile-drawer.active { left: 0; }
+
+.drawer-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+}
+.drawer-avatar-preview {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 2px solid var(--saffron);
+  overflow: hidden;
+}
+.drawer-avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* स्क्रॉलेबल बॉडी - नीचे अतिरिक्त पैडिंग ताकि बटन कभी न कटें */
+.drawer-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: 120px;
+}
+
+.auth-gate-card {
+  background: #fff7ed;
+  border: 1.5px solid #fdba74;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.drawer-field {
+  margin-bottom: 11px;
+}
+.drawer-field label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 3px;
+}
+.d-input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--border-line);
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 12.5px;
+  outline: none;
+  background: #f8fafc;
+}
+.d-input:focus { border-color: var(--saffron); background: #fff; }
+
+.btn-drawer-action {
+  width: 100%;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+/* सुरक्षित करें और लॉगआउट का स्थायी एक्शन बॉक्स */
+.drawer-footer-actions {
+  position: sticky;
+  bottom: -20px;
+  background: #fff;
+  padding-top: 14px;
+  padding-bottom: 8px;
+  border-top: 1px solid var(--border-line);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.btn-save-profile {
+  height: 44px;
+  border: 0;
+  background: var(--india-green);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-logout {
+  height: 44px;
+  border: 1px solid var(--red);
+  background: var(--red-bg);
+  color: var(--red);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* =========================================================
+   5. मोडाल्स व सामान्य घटक (Modals)
+   ========================================================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1100;
+}
+.box {
+  width: 100%;
+  max-width: 580px;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 18px 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalrow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.btn-cancel {
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: var(--text-muted);
+  font-weight: 800;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.btn-save {
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--india-green);
+  color: #fff;
+  font-weight: 800;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.btn-close-sm {
+  border: 0;
+  background: #f1f5f9;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* ग्राहक कार्ड (अंदर खुलने वाली लिस्ट के लिए) */
+.cust-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.cust-left { display: flex; align-items: center; gap: 8px; }
+.cust-avatar { width: 34px; height: 34px; border-radius: 10px; background: #e2e8f0; font-weight: 800; display: grid; place-items: center; font-size: 12px; }
+.cust-name { font-size: 12.5px; font-weight: 800; }
+.cust-phone { font-size: 9.5px; color: var(--text-muted); }
+.cust-amt { font-size: 13.5px; font-weight: 800; text-align: right; }
+.cust-status { font-size: 9px; font-weight: 700; }
+
+/* सेवाएँ सूची */
+.services-list-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.srv-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid var(--border-line);
+  border-radius: 14px;
+  cursor: pointer;
+}
+.srv-row:active { transform: scale(0.985); }
+.srv-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.srv-txt { flex: 1; }
+.srv-txt h3 { font-size: 13px; font-weight: 800; }
+.srv-txt p { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.srv-arrow { font-size: 12px; font-weight: 800; color: #0284c7; }
+
+/* टोस्ट नोटिफिकेशन */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 84px;
+  transform: translate(-50%, 20px);
+  background: #0f172a;
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s ease;
+  z-index: 2000;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* =========================================================
+   6. प्रिंट नियम (@media print)
+   ========================================================= */
+#invoicePrintArea, #clinicPrintArea, #pharmaPrintArea { display: none; }
+@media print {
+  body > * { display: none !important; }
+  #invoicePrintArea, #clinicPrintArea, #pharmaPrintArea {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+}
